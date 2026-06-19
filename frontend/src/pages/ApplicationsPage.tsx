@@ -30,6 +30,21 @@ function ApplicationsPage() {
   const [company, setCompany] = useState('');
   const [position, setPosition] = useState('');
 
+function handleAddApplication() {
+  const newApplication: Application = {
+    id: applications.length + 1,
+    company: company,
+    position: position,
+    status: 'Applied',
+    dateApplied: '2026-06-19',
+  };
+
+  setApplications([...applications, newApplication]);
+
+  setCompany('');
+  setPosition('');
+}
+
   return (
     <div>
       <h1>Applications</h1>
@@ -48,7 +63,9 @@ function ApplicationsPage() {
           onChange={(event) => setPosition(event.target.value)}
         />
 
-        <button>Add Application</button>
+        <button onClick={handleAddApplication}>
+          Add Application
+        </button>
 
       {applications.map((application) => (
         <ApplicationCard
