@@ -1,11 +1,13 @@
-import DashboardPage from './pages/DashboardPage';
+import { BrowserRouter } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
   return (
-    <div>
-      <h1>Internship Tracker</h1>
-      <DashboardPage />
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 
