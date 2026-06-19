@@ -1,5 +1,6 @@
 import StatusCard from '../components/StatusCard';
 import type { Status } from '../types/status';
+import './DashboardPage.css';
 
 const statuses: Status[] = [
   { title: 'Interested', count: 5 },
@@ -12,17 +13,19 @@ const statuses: Status[] = [
 
 function DashboardPage() {
   return (
-    <div>
+    <div className="dashboard">
       <h1>Dashboard</h1>
       <h2>Total Applications: 24</h2>
 
-      {statuses.map((status) => (
-        <StatusCard
+      <div className="status-grid">
+        {statuses.map((status) => (
+          <StatusCard
             key={status.title}
             title={status.title}
             count={status.count}
-        />
+          />
         ))}
+      </div>
     </div>
   );
 }

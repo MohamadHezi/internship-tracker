@@ -1,0 +1,11 @@
+.dashboard {
+  padding: 2rem;
+}
+
+.status-grid {
+  margin-top: 1rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

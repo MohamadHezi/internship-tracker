@@ -1,0 +1,17 @@
+.status-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 150px;
+  text-align: center;
+  background-color: white;
+}
+
+.status-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.status-card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
