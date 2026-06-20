@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import type { Application } from '../types/application';
 import ApplicationCard from '../components/ApplicationCard';
-import { useState } from 'react';
+import ApplicationForm from '../components/ApplicationForm';
 
 function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([
@@ -27,50 +28,64 @@ function ApplicationsPage() {
     },
   ]);
 
-  const [company, setCompany] = useState('');
-  const [position, setPosition] = useState('');
+  function handleAddApplication(
+    company: string,
+    position: string
+  ) {
+    const newApplication: Application = {
+      id: applications.length + 1,
+      company,
+      position,
+      status: 'Applied',
+      dateApplied: '2026-06-19',
+    };
 
-function handleAddApplication() {
-  const newApplication: Application = {
-    id: applications.length + 1,
-    company: company,
-    position: position,
-    status: 'Applied',
-    dateApplied: '2026-06-19',
-  };
+    setApplications([...applications, newApplication,]);
+  }
 
-  setApplications([...applications, newApplication]);
+  function handleDeleteApplication(id: number) {
+    const updatedApplications = applications.filter(
+      (application) => application.id !== id
+    );
 
-  setCompany('');
-  setPosition('');
-}
+    setApplications(updatedApplications);
+  }
+  
+  function handleUpdateApplication(
+    id: number,
+    company: string,
+    position: string
+  ) {
+    const updatedApplications =
+      applications.map((application) => {
+        if (application.id === id) {
+          return {
+            ...application,
+            company,
+            position,
+          };
+        }
+
+        return application;
+      });
+
+    setApplications(updatedApplications);
+  }
 
   return (
     <div>
       <h1>Applications</h1>
 
-        <input
-          type="text"
-          placeholder="Company"
-          value={company}
-          onChange={(event) => setCompany(event.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="Position"
-          value={position}
-          onChange={(event) => setPosition(event.target.value)}
-        />
-
-        <button onClick={handleAddApplication}>
-          Add Application
-        </button>
+      <ApplicationForm
+        onAddApplication={handleAddApplication}
+      />
 
       {applications.map((application) => (
         <ApplicationCard
           key={application.id}
           application={application}
+          onDelete={handleDeleteApplication}
+          onUpdate={handleUpdateApplication}
         />
       ))}
     </div>
