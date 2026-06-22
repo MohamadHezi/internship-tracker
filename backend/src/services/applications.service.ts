@@ -1,68 +1,62 @@
 import { Application } from '../types/application';
+import { pool } from '../database/database';
 
-const applications: Application[] = [
-  {
-    id: 1,
-    company: 'Google',
-    position: 'Software Engineering Intern',
-    status: 'Applied',
-  },
-  {
-    id: 2,
-    company: 'Shopify',
-    position: 'Backend Developer Intern',
-    status: 'Interview',
-  },
-];
 
-export function getAllApplications() {
-  return applications;
+export async function getAllApplications(): Promise<Application[]> {
+  const result = await pool.query('SELECT * FROM applications');
+
+  return result.rows;
 }
 
-export function createApplication(company: string, position: string) {
-  const newApplication = {
-    id: applications.length + 1,
-    company,
-    position,
-    status: 'Applied',
-  };
-
-  applications.push(newApplication);
-  return newApplication;
-}
-
-export function deleteApplication(
-  id: number
-) {
-  const index = applications.findIndex(
-    (application) =>
-      application.id === id
+export async function createApplication(
+  company: string,
+  position: string
+): Promise<Application> {
+  const result = await pool.query(
+    `
+    INSERT INTO applications
+    (company, position, status)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+    `,
+    [company, position, 'Applied']
   );
 
-  if (index === -1) {
-    return false;
-  }
-
-  applications.splice(index, 1);
-
-  return true;
+  return result.rows[0];
 }
 
-export function updateApplication(
+export async function deleteApplication(id: number): Promise<boolean> {
+  const result = await pool.query(
+    `
+    DELETE FROM applications
+    WHERE id = $1
+    RETURNING *;
+    `,
+    [id]
+  );
+
+  return result.rowCount !== 0;
+}
+
+export async function updateApplication(
   id: number,
   company: string,
   position: string
-) {
-  const application = applications.find(
-    (application) => application.id === id
+): Promise<Application | null> {
+  const result = await pool.query(
+    `
+    UPDATE applications
+    SET company = $1,
+        position = $2
+    WHERE id = $3
+    RETURNING *;
+    `,
+    [company, position, id]
   );
 
-  if (!application) {
+  if (result.rowCount === 0) {
     return null;
   }
 
-  application.company = company;
-  application.position = position;
-
-  return application;
+  return result.rows[0];
 }

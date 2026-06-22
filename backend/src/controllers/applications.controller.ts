@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import { getAllApplications, createApplication, deleteApplication, updateApplication } from '../services/applications.service';
 
-export function getApplications(request: Request, response: Response) {
-  const applications = getAllApplications();
+export async function getApplications(request: Request, response: Response) {
+  const applications = await getAllApplications();
+  
   response.json(applications);
 }
 
-export function postApplication(request: Request, response: Response) {
+// Add the async keyword to the controller definition
+export async function postApplication(request: Request, response: Response) {
   const { company, position } = request.body;
 
   if (!company || !position) {
@@ -15,50 +17,36 @@ export function postApplication(request: Request, response: Response) {
     });
   }
 
-  const application = createApplication(company, position);
+  const application = await createApplication(company, position);
 
-  
-  response.status(201).json(application);
+  return response.status(201).json(application);
 }
 
-export function removeApplication(request: Request, response: Response) {
+export async function removeApplication(request: Request, response: Response) {
   const id = Number(request.params.id);
 
-  const deleted = deleteApplication(id);
+  const deleted = await deleteApplication(id);
 
   if (!deleted) {
-    return response.status(404).json({ message: 'Application not found' });
+    return response.status(404).json({
+      message: 'Application not found',
+    });
   }
 
-  response.status(204).send();
+  return response.status(204).send();
 }
 
-export function editApplication(
-  request: Request,
-  response: Response
-) {
-  const id = Number(
-    request.params.id
-  );
+export async function editApplication(request: Request, response: Response) {
+  const id = Number(request.params.id);
+  const { company, position } = request.body;
 
-  const { company, position } =
-    request.body;
-
-  const updatedApplication =
-    updateApplication(
-      id,
-      company,
-      position
-    );
+  const updatedApplication = await updateApplication(id, company, position);
 
   if (!updatedApplication) {
-    return response
-      .status(404)
-      .json({
-        message:
-          'Application not found',
-      });
+    return response.status(404).json({
+      message: 'Application not found',
+    });
   }
 
-  response.json(updatedApplication);
+  return response.json(updatedApplication);
 }
