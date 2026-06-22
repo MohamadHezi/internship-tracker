@@ -1,75 +1,69 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  getApplications,
+  createApplication,
+  deleteApplication,
+  updateApplication as updateApplicationApi,
+} from '../services/applicationService';
 import type { Application } from '../types/application';
 import ApplicationCard from '../components/ApplicationCard';
 import ApplicationForm from '../components/ApplicationForm';
 
 function ApplicationsPage() {
-  const [applications, setApplications] = useState<Application[]>([
-    {
-      id: 1,
-      company: 'Google',
-      position: 'Software Engineering Intern',
-      status: 'Applied',
-      dateApplied: '2026-06-15',
-    },
-    {
-      id: 2,
-      company: 'Shopify',
-      position: 'Backend Developer Intern',
-      status: 'Interview',
-      dateApplied: '2026-06-10',
-    },
-    {
-      id: 3,
-      company: 'Amazon',
-      position: 'SDE Intern',
-      status: 'OA',
-      dateApplied: '2026-06-12',
-    },
-  ]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
-  function handleAddApplication(
-    company: string,
-    position: string
-  ) {
-    const newApplication: Application = {
-      id: applications.length + 1,
-      company,
-      position,
-      status: 'Applied',
-      dateApplied: '2026-06-19',
-    };
+  useEffect(() => {
+  async function loadApplications() {
+    const data =
+      await getApplications();
 
-    setApplications([...applications, newApplication,]);
+    setApplications(data);
   }
 
-  function handleDeleteApplication(id: number) {
-    const updatedApplications = applications.filter(
-      (application) => application.id !== id
+    loadApplications();
+  }, []);
+
+async function handleAddApplication(
+  company: string,
+  position: string
+) {
+  const application =
+    await createApplication(
+      company,
+      position
     );
 
-    setApplications(updatedApplications);
+  setApplications([
+    ...applications,
+    application,
+  ]);
+}
+
+  async function handleDeleteApplication(id: number) {
+    await deleteApplication(id);
+
+    setApplications(applications.filter((application) => application.id !== id));
   }
   
-  function handleUpdateApplication(
+  async function handleUpdateApplication(
     id: number,
     company: string,
     position: string
   ) {
-    const updatedApplications =
-      applications.map((application) => {
-        if (application.id === id) {
-          return {
-            ...application,
-            company,
-            position,
-          };
-        }
+    const updatedApplication =
+      await updateApplicationApi(
+        id,
+        company,
+        position
+      );
 
-        return application;
-      });
-
-    setApplications(updatedApplications);
+    setApplications(
+      applications.map((application) =>
+        application.id === id
+          ? updatedApplication
+          : application
+      )
+    );
   }
 
   return (
