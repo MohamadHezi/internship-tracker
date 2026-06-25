@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { Application } from '../../types/application';
 import { useState } from 'react';
 
@@ -7,7 +8,6 @@ interface ApplicationCardProps {
   onUpdate: (id: number, company: string, position: string) => void;
 }
 
-// Helper function to return dynamic badge styles
 function getStatusColor(status: string) {
   switch (status) {
     case 'Applied':
@@ -24,6 +24,7 @@ function getStatusColor(status: string) {
 }
 
 function ApplicationCard({ application, onDelete, onUpdate }: ApplicationCardProps) {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedCompany, setEditedCompany] = useState(application.company);
   const [editedPosition, setEditedPosition] = useState(application.position);
@@ -37,7 +38,6 @@ function ApplicationCard({ application, onDelete, onUpdate }: ApplicationCardPro
     setIsEditing(false);
   }
 
-  // --- RENDERING EDITING STATE ---
   if (isEditing) {
     return (
       <div className="rounded-xl border border-blue-300 bg-blue-50/30 p-6 shadow-xs transition-all">
@@ -85,11 +85,15 @@ function ApplicationCard({ application, onDelete, onUpdate }: ApplicationCardPro
     );
   }
 
-  // --- RENDERING DEFAULT VIEW STATE ---
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-xs transition-all hover:shadow-md hover:border-gray-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h3 className="text-xl font-bold text-gray-900 tracking-tight">{application.company}</h3>
+        <h3 
+          onClick={() => navigate(`/applications/${application.id}`)}
+          className="text-xl font-bold text-gray-900 tracking-tight cursor-pointer hover:text-blue-600 transition-colors inline-block"
+        >
+          {application.company}
+        </h3>
         <p className="text-sm font-medium text-gray-500 mt-0.5">{application.position}</p>
         {application.dateApplied && (
           <p className="text-xs text-gray-400 mt-2">Applied on: {application.dateApplied}</p>
@@ -97,12 +101,10 @@ function ApplicationCard({ application, onDelete, onUpdate }: ApplicationCardPro
       </div>
 
       <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-4 sm:pt-0 border-gray-100">
-        {/* Status Badge */}
         <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider ${getStatusColor(application.status || 'Applied')}`}>
           {application.status || 'Applied'}
         </span>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsEditing(true)}

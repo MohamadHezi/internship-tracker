@@ -1,4 +1,4 @@
-import { CreateApplicationRequest } from '../types/application-request';
+import { CreateApplicationRequest } from '../@types/application-request';
 
 export function isValidApplication(
   data: CreateApplicationRequest

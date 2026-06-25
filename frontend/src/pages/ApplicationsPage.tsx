@@ -9,6 +9,16 @@ import type { Application } from '../types/application';
 import ApplicationCard from '../components/application/ApplicationCard';
 import ApplicationForm from '../components/application/ApplicationForm';
 
+interface ApplicationFormData {
+  company: string;
+  position: string;
+  status: string;
+  location: string;
+  salary: string;
+  notes: string;
+  jobUrl: string;
+}
+
 function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -29,9 +39,19 @@ function ApplicationsPage() {
     loadApplications();
   }, []);
 
-  async function handleAddApplication(company: string, position: string) {
+  async function handleAddApplication(
+    applicationData: ApplicationFormData
+  ) {
     try {
-      const application = await createApplication(company, position);
+      const application = await createApplication(
+        applicationData.company,
+        applicationData.position,
+        applicationData.status,
+        applicationData.location,
+        applicationData.salary,
+        applicationData.notes,
+        applicationData.jobUrl
+      );
       setApplications([...applications, application]);
     } catch (err) {
       console.error(err);
@@ -66,8 +86,8 @@ function ApplicationsPage() {
   });
 
   filteredApplications.sort((a, b) => {
-    const timeA = a.dateApplied ? new Date(a.dateApplied).getTime() : 0;
-    const timeB = b.dateApplied ? new Date(b.dateApplied).getTime() : 0;
+    const timeA = a.date_applied ? new Date(a.date_applied).getTime() : 0;
+    const timeB = b.date_applied ? new Date(b.date_applied).getTime() : 0;
     switch (sortBy) {
       case 'Company A-Z': return a.company.localeCompare(b.company);
       case 'Company Z-A': return b.company.localeCompare(a.company);

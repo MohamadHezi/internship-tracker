@@ -3,6 +3,7 @@ export interface Application {
   company: string;
   position: string;
   status: string;
+  user_id: number;
   date_applied: string | null;
   location: string | null;
   salary: string | null;

@@ -24,7 +24,12 @@ export async function getApplications(): Promise<Application[]> {
 
 export async function createApplication(
   company: string,
-  position: string
+  position: string,
+  status: string,
+  location: string,
+  salary: string,
+  notes: string,
+  jobUrl: string
 ): Promise<Application> {
   const response = await fetch(`${API_URL}/applications`, {
     method: 'POST',
@@ -32,8 +37,34 @@ export async function createApplication(
     body: JSON.stringify({
       company,
       position,
+      status,
+      location,
+      salary,
+      notes,
+      job_url: jobUrl,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error('Failed to create application');
+  }
+
+  return response.json();
+}
+
+export async function getApplication(id: number) {
+  const response = await fetch(
+    `${API_URL}/applications/${id}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      'Failed to fetch application'
+    );
+  }
 
   return response.json();
 }
@@ -62,6 +93,34 @@ export async function updateApplication(
       position,
     }),
   });
+
+  return response.json();
+}
+
+export async function uploadResume(
+  applicationId: number,
+  file: File
+) {
+  const formData = new FormData();
+
+  formData.append('resume', file);
+
+  const token = localStorage.getItem('token');
+
+  const response = await fetch(
+    `${API_URL}/applications/${applicationId}/resume`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to upload resume');
+  }
 
   return response.json();
 }

@@ -22,13 +22,14 @@ export function authenticateToken(
     });
   }
   
-  try {
-    jwt.verify(token, process.env.JWT_SECRET!);
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET!
+  ) as { userId: number };
 
-    next();
-  } catch {
-    return response.status(401).json({
-      message: 'Invalid token',
-    });
-  }
+  request.user = {
+    userId: decoded.userId,
+  };
+
+  next();
 }

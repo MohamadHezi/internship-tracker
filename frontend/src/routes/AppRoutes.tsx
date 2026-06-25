@@ -5,6 +5,7 @@ import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ApplicationsPage from '../pages/ApplicationsPage';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
+import ApplicationDetailsPage from '../pages/ApplicationDetailsPage';
 
 function AppRoutes() {
   return (
@@ -29,7 +30,17 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       />
+      <Route
+        path="/applications/:id"
+        element={
+          <ProtectedRoute>
+            <ApplicationDetailsPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
+
+    
   );
 }
 
