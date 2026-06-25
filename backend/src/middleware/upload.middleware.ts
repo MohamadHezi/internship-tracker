@@ -2,7 +2,7 @@ import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
-    callback(null, 'src/uploads');
+    callback(null, process.env.UPLOAD_DIR || 'src/uploads');
   },
 
   filename: (request, file, callback) => {

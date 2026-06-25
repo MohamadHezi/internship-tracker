@@ -22,14 +22,20 @@ export function authenticateToken(
     });
   }
   
-  const decoded = jwt.verify(
-    token,
-    process.env.JWT_SECRET!
-  ) as { userId: number };
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET!
+    ) as { userId: number };
 
-  request.user = {
-    userId: decoded.userId,
-  };
+    request.user = {
+      userId: decoded.userId,
+    };
 
-  next();
+    next();
+  } catch {
+    return response.status(401).json({
+      message: 'Invalid or expired token',
+    });
+  }
 }
