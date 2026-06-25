@@ -1,26 +1,6 @@
 import type { DashboardData } from '../types/dashboard';
-
-const API_URL = 'http://localhost:3000';
-
-function getAuthHeaders() {
-  const token = localStorage.getItem('token');
-
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-}
+import { apiFetch } from './api';
 
 export async function getDashboard(): Promise<DashboardData> {
-  const response = await fetch(
-    `${API_URL}/dashboard`,
-    {
-      headers: getAuthHeaders(),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to load dashboard');
-  }
-
-  return response.json();
+  return apiFetch<DashboardData>('/dashboard');
 }

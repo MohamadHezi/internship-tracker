@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import type { Application } from '../../types/application';
 import StatusBadge from '../common/StatusBadge';
+import { formatDate } from '../../utils/formatDate';
 
 interface RecentApplicationsTableProps {
   applications: Application[];
@@ -52,9 +53,7 @@ function RecentApplicationsTable({
 
               <td className="px-6 py-4">
                 {application.dateApplied
-                  ? new Date(
-                      application.dateApplied
-                    ).toLocaleDateString()
+                  ? formatDate(application.dateApplied)
                   : '-'}
               </td>
 

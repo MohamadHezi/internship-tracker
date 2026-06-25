@@ -22,7 +22,7 @@ function Badge({
 
   return (
     <span
-      className={`rounded-full px-3 py-1 text-sm font-medium ${colors[color]}`}
+      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${colors[color]}`}
     >
       {children}
     </span>

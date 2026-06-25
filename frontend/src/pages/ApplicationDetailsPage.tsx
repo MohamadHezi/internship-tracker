@@ -23,19 +23,13 @@ function ApplicationDetailsPage() {
       try {
         const data = await getApplication(Number(id));
         setApplication(data);
+        setFormData(data);
       } catch (error) {
         console.error("Error fetching application details:", error);
       }
     }
     loadApplication();
   }, [id]);
-
-  // Hydrate Form Data copy
-  useEffect(() => {
-    if (application) {
-      setFormData(application);
-    }
-  }, [application]);
 
   // Type-safe Field Update Helper
   function updateField(field: keyof Application, value: string) {
@@ -114,7 +108,6 @@ function ApplicationDetailsPage() {
     );
   }
 
-  // ==================== EDIT MODE FORM VIEW ====================
   if (isEditing) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto py-4">

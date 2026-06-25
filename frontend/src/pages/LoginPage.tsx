@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { login as loginApi } from '../services/authService';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 
 function LoginPage() {
@@ -36,12 +36,6 @@ function LoginPage() {
             Sign in to manage your internship applications.
           </p>
         </div>
-
-        {false && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-red-700">
-            Invalid email or password
-          </div>
-        )}
 
         <label className="mb-2 block font-medium">
           Email

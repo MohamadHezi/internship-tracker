@@ -3,7 +3,6 @@ import {
   getApplications,
   createApplication,
   deleteApplication,
-  updateApplication as updateApplicationApi,
 } from '../services/applicationService';
 import type { Application } from '../types/application';
 import ApplicationCard from '../components/application/ApplicationCard';
@@ -32,10 +31,13 @@ function ApplicationsPage() {
       try {
         const data = await getApplications();
         setApplications(data);
-      } catch (err) {
-        setError('Could not load application data records.');
-      }
+      } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            }
+        }
     }
+
     loadApplications();
   }, []);
 

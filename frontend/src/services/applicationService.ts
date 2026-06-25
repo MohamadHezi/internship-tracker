@@ -1,25 +1,9 @@
 import type { Application } from '../types/application';
+import { apiFetch } from './api';
 
-const API_URL = 'http://localhost:3000';
-
-function getAuthHeaders() {
-  const token = localStorage.getItem('token');
-
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
-}
 
 export async function getApplications(): Promise<Application[]> {
-  const response = await fetch(
-    `${API_URL}/applications`,
-    {
-      headers: getAuthHeaders(),
-    }
-  );
-  const data = await response.json();
-  return data;
+  return apiFetch<Application[]>('/applications');
 }
 
 export async function createApplication(
@@ -31,9 +15,8 @@ export async function createApplication(
   notes: string,
   jobUrl: string
 ): Promise<Application> {
-  const response = await fetch(`${API_URL}/applications`, {
+  return apiFetch<Application>('/applications', {
     method: 'POST',
-    headers: getAuthHeaders(),
     body: JSON.stringify({
       company,
       position,
@@ -44,40 +27,19 @@ export async function createApplication(
       job_url: jobUrl,
     }),
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to create application');
-  }
-
-  return response.json();
 }
 
 export async function getApplication(id: number) {
-  const response = await fetch(
-    `${API_URL}/applications/${id}`,
-    {
-      headers: getAuthHeaders(),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      'Failed to fetch application'
-    );
-  }
-
-  return response.json();
+  return apiFetch<Application>(
+  `/applications/${id}`
+);
 }
 
 export async function deleteApplication(id: number): Promise<void> {
-  const response = await fetch(`${API_URL}/applications/${id}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to delete application');
-  }
+  await apiFetch<void>(`/applications/${id}`,{
+      method: 'DELETE',
+    }
+  );
 }
 
 export async function updateApplication(
@@ -90,9 +52,8 @@ export async function updateApplication(
   notes: string,
   jobUrl: string
 ): Promise<Application> {
-  const response = await fetch(`${API_URL}/applications/${id}`, {
+  return apiFetch<Application>(`/applications/${id}`, {
     method: 'PUT',
-    headers: getAuthHeaders(),
     body: JSON.stringify({
       company,
       position,
@@ -103,38 +64,21 @@ export async function updateApplication(
       job_url: jobUrl,
     }),
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to update application');
-  }
-
-  return response.json();
 }
 
 export async function uploadResume(
   applicationId: number,
   file: File
-) {
+): Promise<Application> {
   const formData = new FormData();
 
   formData.append('resume', file);
 
-  const token = localStorage.getItem('token');
-
-  const response = await fetch(
-    `${API_URL}/applications/${applicationId}/resume`,
+  return apiFetch<Application>(
+    `/applications/${applicationId}/resume`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: formData,
     }
   );
-
-  if (!response.ok) {
-    throw new Error('Failed to upload resume');
-  }
-
-  return response.json();
 }
