@@ -19,6 +19,3 @@ Database:
 AI:
 - OpenAI API
 
-## Status
-
-Phase 1 - Setup
