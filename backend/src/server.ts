@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import applicationsRouter from './routes/applications.routes';
@@ -9,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.get('/', (request, response) => {
   response.send('Internship Tracker API');
