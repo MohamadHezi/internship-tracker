@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getDashboard } from '../services/dashboardService';
 import type { DashboardData } from '../types/dashboard';
-import { APPLICATION_STATUSES } from '../constants/applicationStatuses';
 import StatCard from '../components/dashboard/StatCard';
-import ApplicationCard from '../components/application/ApplicationCard';
+import RecentApplicationsTable from '../components/dashboard/RecentApplicationsTable';
+import StatusBarChart from '../components/dashboard/StatusBarChart';
+import StatusPieChart from '../components/dashboard/StatusPieChart';
 
 function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
@@ -28,41 +29,64 @@ function DashboardPage() {
     );
   }
 
-  const statusMap = Object.fromEntries(
-    dashboard.statusCounts.map((row) => [row.status.toLowerCase(), Number(row.total)])
-  );
+  const chartData = dashboard.statusCounts.map((row) => ({
+    status: row.status,
+    total: Number(row.total),
+  }));
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-5 gap-4">
+      {/* ✨ Refactored Header Layout */}
+      <div className="border-b border-gray-200 pb-6">
+        <h1 className="text-4xl font-bold tracking-tight">
+          Dashboard
+        </h1>
+
+        <p className="mt-3 text-base text-gray-500">
+          Track your internship search and monitor your progress.
+        </p>
+      </div>
+
+      {/* KPI Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
+        <StatCard
+          title="Total Applications"
+          value={dashboard.totalApplications}
+        />
+
+        <StatCard
+          title="Applications This Month"
+          value={dashboard.applicationsThisMonth}
+        />
+
+        <StatCard
+          title="Interviews"
+          value={dashboard.interviews}
+        />
+
+        <StatCard
+          title="Offers"
+          value={dashboard.offers}
+        />
+
+        <StatCard
+          title="Success Rate"
+          value={`${dashboard.successRate}%`}
+        />
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2">
+          <StatusBarChart data={chartData} />
+        </div>
+
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard Overview</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Real-time stage metrics across your internship search pipelines.
-          </p>
-        </div>
-        
-        <div className="bg-blue-50 border border-blue-200 rounded-xl px-5 py-3 flex items-center justify-between sm:justify-start gap-4">
-          <span className="text-sm font-medium text-blue-700 uppercase tracking-wider">Total Pipelines</span>
-          <span className="text-3xl font-bold text-blue-900">{dashboard.totalApplications}</span>
+          <StatusPieChart data={chartData} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {APPLICATION_STATUSES.map((statusName) => {
-          const key = statusName.startsWith('OA') ? 'oa' : statusName.toLowerCase();
-          const countValue = statusMap[key] ?? 0;
-
-          return (
-            <StatCard
-              key={statusName}
-              title={statusName}
-              value={countValue}
-            />
-          );
-        })}
-      </div>
-
+      {/* Recent Applications Section */}
       <div className="pt-4">
         <h2 className="mb-4 text-xl font-bold text-gray-900 tracking-tight">
           Recent Applications
@@ -70,19 +94,12 @@ function DashboardPage() {
         
         {dashboard.recentApplications.length === 0 ? (
           <p className="text-sm text-gray-500 italic bg-gray-50 rounded-xl p-6 border border-dashed border-gray-200">
-            No recently updated applications found. Start applying to populate your activity log!
+            No recently updated applications found.
           </p>
         ) : (
-          <div className="space-y-4">
-            {dashboard.recentApplications.map((application) => (
-              <ApplicationCard
-                key={application.id}
-                application={application}
-                onDelete={() => {}}
-                onUpdate={() => {}}
-              />
-            ))}
-          </div>
+          <RecentApplicationsTable
+            applications={dashboard.recentApplications}
+          />
         )}
       </div>
     </div>

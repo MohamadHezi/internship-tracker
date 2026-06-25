@@ -30,15 +30,34 @@ export async function getDashboardData(userId: number) {
     [userId]
   );
 
+  const applicationsThisMonth = await pool.query(
+    `
+    SELECT COUNT(*) AS total
+    FROM applications
+    WHERE user_id = $1
+      AND "dateApplied" >= date_trunc('month', CURRENT_DATE)
+    `,
+    [userId]
+  );
+
+  const successRate =
+    Number(totalApplications.rows[0].total) === 0
+      ? 0
+      : (
+          (Number(offers.rows[0].total) /
+            Number(totalApplications.rows[0].total)) *
+          100
+        ).toFixed(1);
+
   const statusCounts = await pool.query(
     `
     SELECT
         status,
         COUNT(*) AS total
-  FROM applications
-  WHERE user_id = $1
-  GROUP BY status
-    `,
+        FROM applications
+        WHERE user_id = $1
+        GROUP BY status
+          `,
     [userId]
   );
 
@@ -57,6 +76,8 @@ export async function getDashboardData(userId: number) {
     totalApplications: Number(totalApplications.rows[0].total),
     interviews: Number(interviews.rows[0].total),
     offers: Number(offers.rows[0].total),
+    applicationsThisMonth: Number(applicationsThisMonth.rows[0].total),
+    successRate,
     statusCounts: statusCounts.rows,
     recentApplications: recentApplications.rows,
   };

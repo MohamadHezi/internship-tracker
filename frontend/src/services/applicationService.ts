@@ -83,7 +83,12 @@ export async function deleteApplication(id: number): Promise<void> {
 export async function updateApplication(
   id: number,
   company: string,
-  position: string
+  position: string,
+  status: string,
+  location: string,
+  salary: string,
+  notes: string,
+  jobUrl: string
 ): Promise<Application> {
   const response = await fetch(`${API_URL}/applications/${id}`, {
     method: 'PUT',
@@ -91,8 +96,17 @@ export async function updateApplication(
     body: JSON.stringify({
       company,
       position,
+      status,
+      location,
+      salary,
+      notes,
+      job_url: jobUrl,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error('Failed to update application');
+  }
 
   return response.json();
 }

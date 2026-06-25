@@ -67,14 +67,6 @@ function ApplicationsPage() {
     }
   }
 
-  async function handleUpdateApplication(id: number, company: string, position: string) {
-    try {
-      const updatedApplication = await updateApplicationApi(id, company, position);
-      setApplications(applications.map((app) => (app.id === id ? updatedApplication : app)));
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
   const filteredApplications = [...applications].filter((application) => {
     const matchesSearch = application.company.toLowerCase().includes(search.toLowerCase());
@@ -86,8 +78,8 @@ function ApplicationsPage() {
   });
 
   filteredApplications.sort((a, b) => {
-    const timeA = a.date_applied ? new Date(a.date_applied).getTime() : 0;
-    const timeB = b.date_applied ? new Date(b.date_applied).getTime() : 0;
+    const timeA = a.dateApplied ? new Date(a.dateApplied).getTime() : 0;
+    const timeB = b.dateApplied ? new Date(b.dateApplied).getTime() : 0;
     switch (sortBy) {
       case 'Company A-Z': return a.company.localeCompare(b.company);
       case 'Company Z-A': return b.company.localeCompare(a.company);
@@ -152,7 +144,6 @@ function ApplicationsPage() {
               key={application.id}
               application={application}
               onDelete={handleDeleteApplication}
-              onUpdate={handleUpdateApplication}
             />
           ))
         )}

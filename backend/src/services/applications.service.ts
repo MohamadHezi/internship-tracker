@@ -70,15 +70,18 @@ export async function createApplication(
   return result.rows[0];
 }
 
-export async function deleteApplication(id: number): Promise<boolean> {
+export async function deleteApplication(
+  id: number,
+ userId: number
+): Promise<boolean> {
   const result = await pool.query(
     `
     DELETE FROM applications
     WHERE id = $1
-    AND user_id = $2
+      AND user_id = $2
     RETURNING *;
     `,
-    [id]
+    [id, userId]
   );
 
   return result.rowCount !== 0;
@@ -87,18 +90,40 @@ export async function deleteApplication(id: number): Promise<boolean> {
 export async function updateApplication(
   id: number,
   company: string,
-  position: string
+  position: string,
+  status: string,
+  location: string,
+  salary: string,
+  notes: string,
+  jobUrl: string,
+  userId: number
 ): Promise<Application | null> {
   const result = await pool.query(
     `
     UPDATE applications
-    SET company = $1,
-        position = $2
-    WHERE id = $3
-    AND user_id = $4
+    SET
+      company = $1,
+      position = $2,
+      status = $3,
+      location = $4,
+      salary = $5,
+      notes = $6,
+      job_url = $7
+    WHERE id = $8
+      AND user_id = $9
     RETURNING *;
     `,
-    [company, position, id]
+    [
+      company,
+      position,
+      status,
+      location,
+      salary,
+      notes,
+      jobUrl,
+      id,
+      userId,
+    ]
   );
 
   if (result.rowCount === 0) {

@@ -63,7 +63,10 @@ export async function getApplication(request: Request, response: Response) {
 export async function removeApplication(request: Request, response: Response) {
   const id = Number(request.params.id);
 
-  const deleted = await deleteApplication(id);
+  const deleted = await deleteApplication(
+    id,
+    request.user.userId
+  );
 
   if (!deleted) {
     return response.status(404).json({
@@ -74,11 +77,34 @@ export async function removeApplication(request: Request, response: Response) {
   return response.status(204).send();
 }
 
-export async function editApplication(request: Request, response: Response) {
+export async function editApplication(
+  request: Request,
+  response: Response
+) {
   const id = Number(request.params.id);
-  const { company, position } = request.body;
 
-  const updatedApplication = await updateApplication(id, company, position);
+  const {
+    company,
+    position,
+    status,
+    location,
+    salary,
+    notes,
+    job_url,
+  } = request.body;
+
+  const updatedApplication =
+    await updateApplication(
+      id,
+      company,
+      position,
+      status,
+      location,
+      salary,
+      notes,
+      job_url,
+      request.user.userId
+    );
 
   if (!updatedApplication) {
     return response.status(404).json({

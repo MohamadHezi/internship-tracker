@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import type { Application } from '../../types/application';
-import { useState } from 'react';
 
 interface ApplicationCardProps {
   application: Application;
   onDelete: (id: number) => void;
-  onUpdate: (id: number, company: string, position: string) => void;
 }
 
 function getStatusColor(status: string) {
@@ -23,98 +21,43 @@ function getStatusColor(status: string) {
   }
 }
 
-function ApplicationCard({ application, onDelete, onUpdate }: ApplicationCardProps) {
+function ApplicationCard({ application, onDelete}: ApplicationCardProps) {
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedCompany, setEditedCompany] = useState(application.company);
-  const [editedPosition, setEditedPosition] = useState(application.position);
-
-  function handleSave() {
-    if (!editedCompany.trim() || !editedPosition.trim()) {
-      return;
-    }
-
-    onUpdate(application.id, editedCompany, editedPosition);
-    setIsEditing(false);
-  }
-
-  if (isEditing) {
-    return (
-      <div className="rounded-xl border border-blue-300 bg-blue-50/30 p-6 shadow-xs transition-all">
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-3 items-end">
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Edit Company</label>
-            <input
-              type="text"
-              value={editedCompany}
-              onChange={(event) => setEditedCompany(event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm focus:border-blue-500 focus:outline-hidden"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Edit Position</label>
-            <input
-              type="text"
-              value={editedPosition}
-              onChange={(event) => setEditedPosition(event.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm focus:border-blue-500 focus:outline-hidden"
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <button 
-              onClick={handleSave}
-              className="flex-1 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 cursor-pointer"
-            >
-              Save
-            </button>
-            <button 
-              onClick={() => {
-                setEditedCompany(application.company);
-                setEditedPosition(application.position);
-                setIsEditing(false);
-              }}
-              className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-xs transition-all hover:shadow-md hover:border-gray-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h3 
-          onClick={() => navigate(`/applications/${application.id}`)}
-          className="text-xl font-bold text-gray-900 tracking-tight cursor-pointer hover:text-blue-600 transition-colors inline-block"
+          
+          className="inline-block text-2xl font-bold tracking-tight text-gray-900 transition-colors"
         >
           {application.company}
         </h3>
-        <p className="text-sm font-medium text-gray-500 mt-0.5">{application.position}</p>
+        <p className="mt-1 text-base text-gray-600">{application.position}</p>
         {application.dateApplied && (
-          <p className="text-xs text-gray-400 mt-2">Applied on: {application.dateApplied}</p>
+          <p className="mt-3 text-sm text-gray-500">
+            📅 Applied{" "}
+            {new Date(application.dateApplied).toLocaleDateString()}
+          </p>
         )}
       </div>
 
       <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-4 sm:pt-0 border-gray-100">
-        <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider ${getStatusColor(application.status || 'Applied')}`}>
+        <span className={`inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-wide ${getStatusColor(application.status || 'Applied')}`}>
           {application.status || 'Applied'}
         </span>
 
         <div className="flex items-center gap-2">
+
           <button
-            onClick={() => setIsEditing(true)}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={() => navigate(`/applications/${application.id}`)}
+            className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100"
           >
-            Edit
+            View
           </button>
           <button
             onClick={() => onDelete(application.id)}
-            className="rounded-lg bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 text-xs font-medium hover:bg-red-600 hover:text-white transition-all cursor-pointer"
+            className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-600 hover:text-white"
           >
             Delete
           </button>

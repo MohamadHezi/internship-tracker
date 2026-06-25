@@ -48,8 +48,20 @@ function handleSubmit(e: React.FormEvent) {
 }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 rounded-xl bg-white p-6 shadow-sm border border-gray-200">
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-end">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+    >
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold text-gray-900">
+          Quick Add Application
+        </h2>
+
+        <p className="mt-1 text-sm text-gray-500">
+          Save a new internship application and keep everything organized.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
             Company Name
@@ -132,12 +144,14 @@ function handleSubmit(e: React.FormEvent) {
           />
         </div>
 
-        <button 
-          type="submit"
-          className="w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 shadow-xs transition-colors cursor-pointer"
-        >
-          Add Application
-        </button>
+        <div className="md:col-span-2 xl:col-span-3 flex justify-end">
+          <button
+            type="submit"
+            className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md cursor-pointer"
+          >
+            + Add Application
+          </button>
+        </div>
       </div>
     </form>
   );

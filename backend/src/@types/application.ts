@@ -4,7 +4,7 @@ export interface Application {
   position: string;
   status: string;
   user_id: number;
-  date_applied: string | null;
+  dateApplied: string | null;
   location: string | null;
   salary: string | null;
   notes: string | null;

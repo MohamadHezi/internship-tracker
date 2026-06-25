@@ -1,3 +1,5 @@
+import type { DashboardData } from '../types/dashboard';
+
 const API_URL = 'http://localhost:3000';
 
 function getAuthHeaders() {
@@ -8,7 +10,7 @@ function getAuthHeaders() {
   };
 }
 
-export async function getDashboard() {
+export async function getDashboard(): Promise<DashboardData> {
   const response = await fetch(
     `${API_URL}/dashboard`,
     {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getApplication, uploadResume } from '../services/applicationService';
+import { getApplication, uploadResume, updateApplication, deleteApplication} from '../services/applicationService';
 import type { Application } from '../types/application';
 import Section from '../components/ui/Section';
 import DetailRow from '../components/ui/DetailRow';
@@ -54,6 +54,55 @@ function ApplicationDetailsPage() {
       setSelectedFile(null);
     } catch (error) {
       console.error("Error uploading resume:", error);
+    }
+  }
+
+  async function handleSaveChanges() {
+    if (!application || !formData) {
+      return;
+    }
+
+    try {
+      const updatedApplication =
+        await updateApplication(
+          application.id,
+          formData.company,
+          formData.position,
+          formData.status ?? 'Applied',
+          formData.location ?? '',
+          formData.salary ?? '',
+          formData.notes ?? '',
+          formData.jobUrl ?? ''
+        );
+
+      setApplication(updatedApplication);
+      setFormData(updatedApplication);
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleDelete() {
+    if (!application) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this application?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteApplication(application.id);
+
+      navigate('/applications');
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -115,7 +164,7 @@ function ApplicationDetailsPage() {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Date Applied</label>
-                <Input type="date" value={formData.date_applied ?? ''} onChange={(e) => updateField('date_applied', e.target.value)} />
+                <Input type="date" value={formData.dateApplied ?? ''} onChange={(e) => updateField('dateApplied', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -124,11 +173,11 @@ function ApplicationDetailsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recruiter Name</label>
-                <Input value={formData.recruiter_name ?? ''} onChange={(e) => updateField('recruiter_name', e.target.value)} />
+                <Input value={formData.recruiterName ?? ''} onChange={(e) => updateField('recruiterName', e.target.value)} />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recruiter Email</label>
-                <Input type="email" value={formData.recruiter_email ?? ''} onChange={(e) => updateField('recruiter_email', e.target.value)} />
+                <Input type="email" value={formData.recruiterEmail ?? ''} onChange={(e) => updateField('recruiterEmail', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -137,7 +186,7 @@ function ApplicationDetailsPage() {
             <div className="grid grid-cols-1 gap-4 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Interview Date</label>
-                <Input value={formData.interview_date ?? ''} onChange={(e) => updateField('interview_date', e.target.value)} />
+                <Input value={formData.interviewDate ?? ''} onChange={(e) => updateField('interviewDate', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -158,7 +207,7 @@ function ApplicationDetailsPage() {
             <div className="grid grid-cols-1 gap-4 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">External Job Post URL</label>
-                <Input value={formData.job_url ?? ''} onChange={(e) => updateField('job_url', e.target.value)} />
+                <Input value={formData.jobUrl ?? ''} onChange={(e) => updateField('jobUrl', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -175,10 +224,11 @@ function ApplicationDetailsPage() {
           >
             Cancel
           </button>
+          
           <button 
             type="button"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
-            onClick={() => console.log("Save updated object:", formData)}
+            onClick={handleSaveChanges}
           >
             Save Changes
           </button>
@@ -216,19 +266,19 @@ function ApplicationDetailsPage() {
             <DetailRow label="Status" value={application.status || 'Applied'} />
             <DetailRow label="Location" value={application.location ?? '—'} />
             <DetailRow label="Salary" value={application.salary ? <span className="font-mono">{application.salary}</span> : '—'} />
-            <DetailRow label="Applied" value={application.date_applied ?? '—'} />
+            <DetailRow label="Applied" value={application.dateApplied ?? '—'} />
           </div>
         </Section>
 
         <Section title="👤 Recruiter">
           <div className="divide-y divide-gray-100">
-            <DetailRow label="Name" value={application.recruiter_name ?? '—'} />
+            <DetailRow label="Name" value={application.recruiterName ?? '—'} />
             <DetailRow 
               label="Email" 
               value={
-                application.recruiter_email ? (
-                  <a href={`mailto:${application.recruiter_email}`} className="text-blue-600 hover:underline">
-                    {application.recruiter_email}
+                application.recruiterEmail ? (
+                  <a href={`mailto:${application.recruiterEmail}`} className="text-blue-600 hover:underline">
+                    {application.recruiterEmail}
                   </a>
                 ) : (
                   '—'
@@ -240,7 +290,7 @@ function ApplicationDetailsPage() {
 
         <Section title="📅 Interview">
           <div className="divide-y divide-gray-100">
-            <DetailRow label="Interview Date" value={application.interview_date ?? '—'} />
+            <DetailRow label="Interview Date" value={application.interviewDate ?? '—'} />
           </div>
         </Section>
 
@@ -251,18 +301,18 @@ function ApplicationDetailsPage() {
         </Section>
 
         <Section title="📄 Resume">
-          {application.resume_path ? (
+          {application.resumePath ? (
             <div className="mb-4">
               <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3 border border-gray-100 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">📄</span>
                   <div>
                     <p className="font-semibold text-gray-700">Resume Uploaded</p>
-                    <p className="text-xs text-gray-400 font-mono truncate max-w-xs">{application.resume_path}</p>
+                    <p className="text-xs text-gray-400 font-mono truncate max-w-xs">{application.resumePath}</p>
                   </div>
                 </div>
                 <a
-                  href={`http://localhost:3000/uploads/${application.resume_path}`}
+                  href={`http://localhost:3000/uploads/${application.resumePath}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 hover:text-blue-700 underline font-medium"
@@ -298,9 +348,9 @@ function ApplicationDetailsPage() {
 
         <Section title="🔗 Job Posting">
           <div className="text-sm">
-            {application.job_url ? (
+            {application.jobUrl ? (
               <a
-                href={application.job_url}
+                href={application.jobUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:text-blue-700 hover:underline break-all"
@@ -323,6 +373,7 @@ function ApplicationDetailsPage() {
           </button>
           <button 
             type="button"
+            onClick={handleDelete}
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-red-200 bg-red-50 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
           >
             Delete
