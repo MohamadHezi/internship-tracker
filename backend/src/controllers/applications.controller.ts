@@ -46,6 +46,10 @@ export async function postApplication(request: Request, response: Response) {
 export async function getApplication(request: Request, response: Response) {
   const id = Number(request.params.id);
 
+  if (isNaN(id)) {
+    return response.status(400).json({ message: 'Invalid application ID' });
+  }
+
   const application = await getApplicationById(
     id,
     request.user.userId
@@ -62,6 +66,10 @@ export async function getApplication(request: Request, response: Response) {
 
 export async function removeApplication(request: Request, response: Response) {
   const id = Number(request.params.id);
+
+  if (isNaN(id)) {
+    return response.status(400).json({ message: 'Invalid application ID' });
+  }
 
   const deleted = await deleteApplication(
     id,
@@ -81,9 +89,11 @@ export async function editApplication(
   request: Request,
   response: Response
 ) {
-  console.log(request.body);
-
   const id = Number(request.params.id);
+
+  if (isNaN(id)) {
+    return response.status(400).json({ message: 'Invalid application ID' });
+  }
 
   const {
     company,
@@ -93,6 +103,10 @@ export async function editApplication(
     salary,
     notes,
     job_url,
+    recruiterName,
+    recruiterEmail,
+    interviewDate,
+    dateApplied,
   } = request.body;
 
   const updatedApplication =
@@ -105,6 +119,10 @@ export async function editApplication(
       salary,
       notes,
       job_url,
+      recruiterName ?? null,
+      recruiterEmail ?? null,
+      interviewDate ?? null,
+      dateApplied ?? null,
       request.user.userId
     );
 
@@ -130,6 +148,10 @@ export async function uploadResume(
   const applicationId = Number(
     request.params.id
   );
+
+  if (isNaN(applicationId)) {
+    return response.status(400).json({ message: 'Invalid application ID' });
+  }
 
   const updatedApplication =
     await uploadResumeService(

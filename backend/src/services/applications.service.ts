@@ -114,7 +114,11 @@ export async function updateApplication(
       location = $4,
       salary = $5,
       notes = $6,
-      job_url = $7
+      job_url = $7,
+      recruiter_name = $10,
+      recruiter_email = $11,
+      interview_date = $12,
+      date_applied = $13
     WHERE id = $8
       AND user_id = $9
     RETURNING *;
@@ -129,6 +133,10 @@ export async function updateApplication(
       jobUrl,
       id,
       userId,
+      recruiterName,
+      recruiterEmail,
+      interviewDate,
+      dateApplied,
     ]
   );
 
@@ -159,5 +167,5 @@ export async function uploadResume(
     ]
   );
 
-  return mapApplication(result.rows[0]);
+  return result.rows[0] ? mapApplication(result.rows[0]) : null;
 }

@@ -8,7 +8,7 @@ export function mapApplication(row: any): Application {
     status: row.status,
     userId: row.user_id,
 
-    dateApplied: row.date_applied ?? row.dateApplied,
+    dateApplied: row.date_applied ?? null,
 
     location: row.location,
     salary: row.salary,
