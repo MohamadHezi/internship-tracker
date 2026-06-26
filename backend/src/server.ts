@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import applicationsRouter from './routes/applications.routes';
 import authRouter from './routes/auth.routes';
@@ -29,6 +29,11 @@ app.use(
 app.use('/applications', applicationsRouter);
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(err);
+  res.status(500).json({ message: 'Internal server error.' });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

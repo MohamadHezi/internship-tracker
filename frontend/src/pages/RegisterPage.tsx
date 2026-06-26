@@ -32,9 +32,13 @@ function RegisterPage() {
       await register(email, password);
 
       navigate('/login');
-    } catch {
-      setError('Unable to create account.');
-    }
+    } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Unable to create account.');
+        }
+      }
   }
 
   return (

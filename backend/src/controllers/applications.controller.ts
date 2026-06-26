@@ -81,6 +81,8 @@ export async function editApplication(
   request: Request,
   response: Response
 ) {
+  console.log(request.body);
+
   const id = Number(request.params.id);
 
   const {

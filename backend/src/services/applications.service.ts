@@ -1,6 +1,6 @@
 import { Application } from '../@types/application';
 import { pool } from '../database/database';
-
+import { mapApplication } from '../utils/mapApplication';
 
 export async function getAllApplications(userId: number): Promise<Application[]> {
   const result = await pool.query(
@@ -12,7 +12,7 @@ export async function getAllApplications(userId: number): Promise<Application[]>
       `,
       [userId]
     );
-  return result.rows;
+  return result.rows.map(mapApplication);
 }
 
 export async function getApplicationById(id: number, userId: number) {
@@ -26,7 +26,9 @@ export async function getApplicationById(id: number, userId: number) {
     [id, userId]
   );
 
-  return result.rows[0];
+  return result.rows[0]
+    ? mapApplication(result.rows[0])
+    : null;
 }
 
 export async function createApplication(
@@ -67,7 +69,7 @@ export async function createApplication(
     ]
   );
 
-  return result.rows[0];
+  return mapApplication(result.rows[0]);
 }
 
 export async function deleteApplication(
@@ -96,6 +98,10 @@ export async function updateApplication(
   salary: string,
   notes: string,
   jobUrl: string,
+  recruiterName: string | null,
+  recruiterEmail: string | null,
+  interviewDate: string | null,
+  dateApplied: string | null,
   userId: number
 ): Promise<Application | null> {
   const result = await pool.query(
@@ -130,7 +136,7 @@ export async function updateApplication(
     return null;
   }
 
-  return result.rows[0];
+  return mapApplication(result.rows[0]);
 }
 
 export async function uploadResume(
@@ -153,5 +159,5 @@ export async function uploadResume(
     ]
   );
 
-  return result.rows[0];
+  return mapApplication(result.rows[0]);
 }

@@ -35,7 +35,7 @@ export async function getDashboardData(userId: number) {
     SELECT COUNT(*) AS total
     FROM applications
     WHERE user_id = $1
-      AND "dateApplied" >= date_trunc('month', CURRENT_DATE)
+      AND date_applied >= date_trunc('month', CURRENT_DATE)
     `,
     [userId]
   );
@@ -66,7 +66,7 @@ export async function getDashboardData(userId: number) {
     SELECT *
     FROM applications
     WHERE user_id = $1
-    ORDER BY "dateApplied" DESC
+    ORDER BY date_applied DESC
     LIMIT 5
     `,
     [userId]
