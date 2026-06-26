@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { login as loginApi } from '../services/authService';
 import { useAuth } from '../context/useAuth';
-
+import Button from '../components/ui/Button';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -63,12 +63,12 @@ function LoginPage() {
           className="mb-5 w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500"
         />
 
-        <button 
+        <Button 
           onClick={handleSubmit}
-          className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
+          className="w-full py-3"
         >
           Login
-        </button>
+        </Button>
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?

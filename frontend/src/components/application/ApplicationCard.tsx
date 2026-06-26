@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Application } from '../../types/application';
 import { formatDate } from '../../utils/formatDate';
 import StatusBadge from '../ui/StatusBadge';
+import Button from '../ui/Button';
 
 interface ApplicationCardProps {
   application: Application;
@@ -34,18 +35,21 @@ function ApplicationCard({ application, onDelete}: ApplicationCardProps) {
 
         <div className="flex items-center gap-2">
 
-          <button
-            onClick={() => navigate(`/applications/${application.id}`)}
-            className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100"
+          <Button
+            variant="secondary"
+            onClick={() =>
+              navigate(`/applications/${application.id}`)
+            }
           >
             View
-          </button>
-          <button
+          </Button>
+
+          <Button
+            variant="danger"
             onClick={() => onDelete(application.id)}
-            className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-600 hover:text-white"
           >
             Delete
-          </button>
+          </Button>
         </div>
       </div>
     </div>

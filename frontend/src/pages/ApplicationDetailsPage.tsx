@@ -6,6 +6,7 @@ import Section from '../components/ui/Section';
 import DetailRow from '../components/ui/DetailRow';
 import Input from '../components/ui/Input';
 import Badge from '../components/ui/Badge';
+import Button from '../components/ui/Button';
 
 function ApplicationDetailsPage() {
   const { id } = useParams();
@@ -207,24 +208,25 @@ function ApplicationDetailsPage() {
         </div>
 
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-          <button 
+          <Button
+            variant="secondary"
             type="button"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5"
             onClick={() => {
               setIsEditing(false);
-              setFormData(application); // Rollback changes
+              setFormData(application);
             }}
           >
             Cancel
-          </button>
+          </Button>
           
-          <button 
+          <Button
             type="button"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5"
             onClick={handleSaveChanges}
           >
             Save Changes
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -329,13 +331,12 @@ function ApplicationDetailsPage() {
               }}
               className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer"
             />
-            <button 
+            <Button
               onClick={handleUploadResume}
               disabled={!selectedFile}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Upload Resume
-            </button>
+            </Button>
           </div>
         </Section>
 
@@ -357,27 +358,29 @@ function ApplicationDetailsPage() {
         </Section>
 
         <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200">
-          <button 
+          <Button
+            variant="secondary"
             type="button"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5"
             onClick={() => navigate('/applications')}
           >
             Back
-          </button>
-          <button 
+          </Button>
+          <Button
+            variant="danger"
             type="button"
+            className="w-full sm:w-auto px-5 py-2.5"
             onClick={handleDelete}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-red-200 bg-red-50 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
           >
             Delete
-          </button>
-          <button 
+          </Button>
+          <Button
             type="button"
-            className="w-full sm:w-auto order-first sm:order-last px-5 py-2.5 rounded-xl bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+            className="order-first w-full px-5 py-2.5 sm:order-last sm:w-auto"
             onClick={() => setIsEditing(true)}
           >
             Edit
-          </button>
+          </Button>
         </div>
       </div>
     </div>

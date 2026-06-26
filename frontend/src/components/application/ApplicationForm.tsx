@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../ui/Button';
 
 interface ApplicationFormData {
   company: string;
@@ -145,12 +146,12 @@ function handleSubmit(e: React.FormEvent) {
         </div>
 
         <div className="md:col-span-2 xl:col-span-3 flex justify-end">
-          <button
+          <Button
             type="submit"
-            className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md cursor-pointer"
+            className="w-full py-3"
           >
             + Add Application
-          </button>
+          </Button>
         </div>
       </div>
     </form>
