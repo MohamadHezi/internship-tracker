@@ -3,20 +3,20 @@ interface StatusBadgeProps {
 }
 
 function StatusBadge({ status }: StatusBadgeProps) {
-  const styles = {
-    Applied: 'bg-blue-100 text-blue-700',
-    Interview: 'bg-yellow-100 text-yellow-700',
-    Offer: 'bg-green-100 text-green-700',
-    Rejected: 'bg-red-100 text-red-700',
-    Interested: 'bg-gray-100 text-gray-700',
-    'OA (Online Assessment)': 'bg-purple-100 text-purple-700',
+  const styles: Record<string, string> = {
+    Interested: 'bg-neutral-100 text-neutral-600',
+    Applied: 'bg-blue-50 text-blue-700',
+    OA: 'bg-violet-50 text-violet-700',
+    'OA (Online Assessment)': 'bg-violet-50 text-violet-700',
+    Interview: 'bg-amber-50 text-amber-700',
+    Offer: 'bg-emerald-50 text-emerald-700',
+    Rejected: 'bg-red-50 text-red-600',
   };
 
   return (
     <span
-      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-        styles[status as keyof typeof styles] ??
-        'bg-gray-100 text-gray-700'
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+        styles[status] ?? 'bg-neutral-100 text-neutral-600'
       }`}
     >
       {status}

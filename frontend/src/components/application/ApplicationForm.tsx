@@ -12,10 +12,12 @@ interface ApplicationFormData {
 }
 
 interface ApplicationFormProps {
-  onAddApplication: (
-    application: ApplicationFormData
-  ) => void;
+  onAddApplication: (application: ApplicationFormData) => void;
 }
+
+const inputClass =
+  'w-full rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-400';
+const labelClass = 'mb-1.5 block text-xs font-medium uppercase tracking-wider text-neutral-400';
 
 function ApplicationForm({ onAddApplication }: ApplicationFormProps) {
   const [company, setCompany] = useState('');
@@ -26,131 +28,112 @@ function ApplicationForm({ onAddApplication }: ApplicationFormProps) {
   const [notes, setNotes] = useState('');
   const [jobUrl, setJobUrl] = useState('');
 
-function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  
-  if (!company.trim() || !position.trim()) return;
-  onAddApplication({
-    company,
-    position,
-    status,
-    location,
-    salary,
-    notes,
-    jobUrl,
-  });
-  setCompany('');
-  setPosition('');
-  setStatus('Applied');
-  setLocation('');
-  setSalary('');
-  setNotes('');
-  setJobUrl('');
-}
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!company.trim() || !position.trim()) return;
+    onAddApplication({ company, position, status, location, salary, notes, jobUrl });
+    setCompany('');
+    setPosition('');
+    setStatus('Applied');
+    setLocation('');
+    setSalary('');
+    setNotes('');
+    setJobUrl('');
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
-    >
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Quick Add Application
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Save a new internship application and keep everything organized.
-        </p>
+    <form onSubmit={handleSubmit} className="rounded-xl border border-neutral-100 bg-white p-6">
+      <div className="mb-5">
+        <h2 className="text-sm font-semibold text-neutral-900">Add Application</h2>
+        <p className="mt-0.5 text-xs text-neutral-400">Log a new internship to your pipeline.</p>
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Company Name
-          </label>
+          <label className={labelClass}>Company</label>
           <input
             type="text"
             placeholder="e.g. Google"
             value={company}
-            onChange={(event) => setCompany(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-hidden transition-all"
+            onChange={(e) => setCompany(e.target.value)}
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Position / Role
-          </label>
+          <label className={labelClass}>Position</label>
           <input
             type="text"
             placeholder="e.g. Software Engineer"
             value={position}
-            onChange={(event) => setPosition(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-hidden transition-all"
+            onChange={(e) => setPosition(e.target.value)}
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Location
-          </label>
+          <label className={labelClass}>Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={`${inputClass} cursor-pointer`}
+          >
+            <option>Interested</option>
+            <option>Applied</option>
+            <option>OA</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
+        </div>
 
+        <div>
+          <label className={labelClass}>Location</label>
           <input
             type="text"
             placeholder="e.g. Ottawa, ON"
             value={location}
-            onChange={(event) => setLocation(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-hidden transition-all"
+            onChange={(e) => setLocation(e.target.value)}
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Salary
-          </label>
-
+          <label className={labelClass}>Salary</label>
           <input
             type="text"
             placeholder="e.g. $35/hr"
             value={salary}
-            onChange={(event) => setSalary(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-hidden transition-all"
+            onChange={(e) => setSalary(e.target.value)}
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Job URL
-          </label>
-
+          <label className={labelClass}>Job URL</label>
           <input
             type="url"
             placeholder="https://..."
             value={jobUrl}
-            onChange={(event) => setJobUrl(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-hidden transition-all"
+            onChange={(e) => setJobUrl(e.target.value)}
+            className={inputClass}
           />
         </div>
 
         <div className="md:col-span-2 xl:col-span-3">
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 pl-1">
-            Notes
-          </label>
-
+          <label className={labelClass}>Notes</label>
           <textarea
-            rows={4}
+            rows={3}
             placeholder="Add any notes about this application..."
             value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm focus:border-blue-500 focus:bg-white focus:outline-none transition-all resize-none"
+            onChange={(e) => setNotes(e.target.value)}
+            className={`${inputClass} resize-none`}
           />
         </div>
 
         <div className="md:col-span-2 xl:col-span-3 flex justify-end">
-          <Button
-            type="submit"
-            className="w-full py-3"
-          >
-            + Add Application
+          <Button type="submit" className="px-5">
+            Add Application
           </Button>
         </div>
       </div>

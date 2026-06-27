@@ -4,11 +4,9 @@ interface AuthLayoutProps {
   children: ReactNode;
 }
 
-function AuthLayout({
-  children,
-}: AuthLayoutProps) {
+function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-6">
+    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-6">
       {children}
     </div>
   );

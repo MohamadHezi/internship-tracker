@@ -52,7 +52,7 @@ function RegisterPage() {
           className="space-y-5"
         >
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-neutral-700">
               Email
             </label>
 
@@ -65,7 +65,7 @@ function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-neutral-700">
               Password
             </label>
 
@@ -78,7 +78,7 @@ function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-neutral-700">
               Confirm Password
             </label>
 

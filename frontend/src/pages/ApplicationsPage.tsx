@@ -21,7 +21,6 @@ interface ApplicationFormData {
 function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [error, setError] = useState<string | null>(null);
-
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('Newest');
@@ -32,18 +31,15 @@ function ApplicationsPage() {
         const data = await getApplications();
         setApplications(data);
       } catch (error) {
-            if (error instanceof Error) {
-                setError(error.message);
-            }
+        if (error instanceof Error) {
+          setError(error.message);
         }
+      }
     }
-
     loadApplications();
   }, []);
 
-  async function handleAddApplication(
-    applicationData: ApplicationFormData
-  ) {
+  async function handleAddApplication(applicationData: ApplicationFormData) {
     try {
       const application = await createApplication(
         applicationData.company,
@@ -69,7 +65,6 @@ function ApplicationsPage() {
     }
   }
 
-
   const filteredApplications = [...applications].filter((application) => {
     const matchesSearch = application.company.toLowerCase().includes(search.toLowerCase());
     const matchesStatus =
@@ -90,31 +85,36 @@ function ApplicationsPage() {
     }
   });
 
+  const selectClass =
+    'rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 cursor-pointer transition';
+
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="border-b border-gray-200 pb-5">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Applications</h1>
-        <p className="mt-2 text-sm text-gray-500">Monitor interview processes and track submissions.</p>
+    <div className="mx-auto max-w-4xl space-y-6">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Applications</h1>
+        <p className="mt-1 text-sm text-neutral-500">Manage and track your internship pipeline.</p>
       </div>
 
-      {error && <p className="text-red-500 font-medium">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       <ApplicationForm onAddApplication={handleAddApplication} />
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3 bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
+      {/* Filters */}
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           type="text"
-          placeholder="Search by company name..."
+          placeholder="Search by company..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-blue-500 focus:outline-hidden shadow-xs"
+          className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-blue-500 focus:outline-hidden cursor-pointer shadow-xs"
+          className={selectClass}
         >
-          <option value="All">All Stages / Statuses</option>
+          <option value="All">All Statuses</option>
           <option value="Interested">Interested</option>
           <option value="Applied">Applied</option>
           <option value="OA">OA (Online Assessment)</option>
@@ -125,20 +125,21 @@ function ApplicationsPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-blue-500 focus:outline-hidden cursor-pointer shadow-xs"
+          className={selectClass}
         >
-          <option value="Newest">Date: Newest to Oldest</option>
-          <option value="Oldest">Date: Oldest to Newest</option>
-          <option value="Company A-Z">Alphabetical: A to Z</option>
-          <option value="Company Z-A">Alphabetical: Z to A</option>
+          <option value="Newest">Newest first</option>
+          <option value="Oldest">Oldest first</option>
+          <option value="Company A-Z">A → Z</option>
+          <option value="Company Z-A">Z → A</option>
         </select>
       </div>
 
-      <div className="space-y-5">
+      {/* Application list */}
+      <div className="space-y-3">
         {filteredApplications.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center shadow-xs">
-            <h2 className="text-lg font-semibold text-gray-900">No matching tracking entries found</h2>
-            <p className="mt-2 text-sm text-gray-500">Try adjusting your query text keywords or filters.</p>
+          <div className="rounded-xl border border-dashed border-neutral-200 p-12 text-center">
+            <p className="text-sm font-medium text-neutral-700">No applications found</p>
+            <p className="mt-1 text-xs text-neutral-400">Try adjusting your filters.</p>
           </div>
         ) : (
           filteredApplications.map((application) => (

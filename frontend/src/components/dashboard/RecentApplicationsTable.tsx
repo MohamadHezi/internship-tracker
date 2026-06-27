@@ -7,64 +7,39 @@ interface RecentApplicationsTableProps {
   applications: Application[];
 }
 
-function RecentApplicationsTable({
-  applications,
-}: RecentApplicationsTableProps) {
+function RecentApplicationsTable({ applications }: RecentApplicationsTableProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <div className="border-b border-gray-200 px-6 py-5">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Recent Applications
-        </h2>
+    <div className="overflow-hidden rounded-xl border border-neutral-100 bg-white">
+      <div className="border-b border-neutral-100 px-5 py-4">
+        <h2 className="text-sm font-semibold text-neutral-900">Recent Applications</h2>
       </div>
-
       <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr className="text-left text-sm text-gray-500">
-            <th className="px-6 py-3">Company</th>
-            <th className="px-6 py-3">Position</th>
-            <th className="px-6 py-3">Status</th>
-            <th className="px-6 py-3">Applied</th>
-            <th className="px-6 py-3"></th>
+        <thead>
+          <tr className="border-b border-neutral-50 bg-neutral-50/60 text-left">
+            <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-neutral-400">Company</th>
+            <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-neutral-400">Position</th>
+            <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-neutral-400">Status</th>
+            <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-neutral-400">Applied</th>
+            <th className="px-5 py-3" />
           </tr>
         </thead>
-
-        <tbody>
+        <tbody className="divide-y divide-neutral-50">
           {applications.map((application) => (
-            <tr
-              key={application.id}
-              className="border-t border-gray-100 transition-colors hover:bg-gray-50"
-            >
-              <td className="px-6 py-4 font-medium">
-                {application.company}
+            <tr key={application.id} className="transition-colors hover:bg-neutral-50/50">
+              <td className="px-5 py-3.5 text-sm font-medium text-neutral-900">{application.company}</td>
+              <td className="px-5 py-3.5 text-sm text-neutral-500">{application.position}</td>
+              <td className="px-5 py-3.5">
+                <StatusBadge status={application.status} />
               </td>
-
-              <td className="px-6 py-4">
-                {application.position}
+              <td className="px-5 py-3.5 text-sm text-neutral-400">
+                {application.dateApplied ? formatDate(application.dateApplied) : '—'}
               </td>
-
-              <td className="px-6 py-4">
-                <StatusBadge
-                  status={application.status}
-                />
-              </td>
-
-              <td className="px-6 py-4">
-                {application.dateApplied
-                  ? formatDate(application.dateApplied)
-                  : '-'}
-              </td>
-
-              <td className="px-6 py-4 text-right">
+              <td className="px-5 py-3.5 text-right">
                 <button
-                  onClick={() =>
-                    navigate(
-                      `/applications/${application.id}`
-                    )
-                  }
-                  className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100"
+                  onClick={() => navigate(`/applications/${application.id}`)}
+                  className="rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
                 >
                   View
                 </button>

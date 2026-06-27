@@ -7,13 +7,9 @@ interface DetailRowProps {
 
 function DetailRow({ label, value }: DetailRowProps) {
   return (
-    <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-0 text-sm">
-      <span className="font-medium text-gray-500">
-        {label}
-      </span>
-      <span className="text-gray-900 font-medium">
-        {value}
-      </span>
+    <div className="flex items-center justify-between py-2.5 text-sm">
+      <span className="font-medium text-neutral-400">{label}</span>
+      <span className="font-medium text-neutral-900">{value}</span>
     </div>
   );
 }

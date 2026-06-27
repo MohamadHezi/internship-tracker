@@ -15,7 +15,7 @@ function DashboardPage() {
         const data = await getDashboard();
         setDashboard(data);
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        console.error('Error fetching dashboard data:', error);
       }
     }
     loadDashboard();
@@ -23,8 +23,8 @@ function DashboardPage() {
 
   if (!dashboard) {
     return (
-      <div className="p-6 text-center text-gray-500 font-medium animate-pulse">
-        Loading dashboard metrics...
+      <div className="flex items-center justify-center py-24">
+        <p className="animate-pulse text-sm text-neutral-400">Loading...</p>
       </div>
     );
   }
@@ -35,73 +35,40 @@ function DashboardPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      {/* ✨ Refactored Header Layout */}
-      <div className="border-b border-gray-200 pb-6">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Dashboard
-        </h1>
-
-        <p className="mt-3 text-base text-gray-500">
-          Track your internship search and monitor your progress.
-        </p>
+    <div className="mx-auto max-w-6xl space-y-8">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-neutral-500">Track your internship search and monitor progress.</p>
       </div>
 
-      {/* KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
-        <StatCard
-          title="Total Applications"
-          value={dashboard.totalApplications}
-        />
-
-        <StatCard
-          title="Applications This Month"
-          value={dashboard.applicationsThisMonth}
-        />
-
-        <StatCard
-          title="Interviews"
-          value={dashboard.interviews}
-        />
-
-        <StatCard
-          title="Offers"
-          value={dashboard.offers}
-        />
-
-        <StatCard
-          title="Success Rate"
-          value={`${dashboard.successRate}%`}
-        />
+      {/* KPI Stats */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+        <StatCard title="Total" value={dashboard.totalApplications} />
+        <StatCard title="This Month" value={dashboard.applicationsThisMonth} />
+        <StatCard title="Interviews" value={dashboard.interviews} />
+        <StatCard title="Offers" value={dashboard.offers} />
+        <StatCard title="Success Rate" value={`${dashboard.successRate}%`} />
       </div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      {/* Charts */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <StatusBarChart data={chartData} />
         </div>
-
         <div>
           <StatusPieChart data={chartData} />
         </div>
       </div>
 
-      {/* Recent Applications Section */}
-      <div className="pt-4">
-        <h2 className="mb-4 text-xl font-bold text-gray-900 tracking-tight">
-          Recent Applications
-        </h2>
-        
-        {dashboard.recentApplications.length === 0 ? (
-          <p className="text-sm text-gray-500 italic bg-gray-50 rounded-xl p-6 border border-dashed border-gray-200">
-            No recently updated applications found.
-          </p>
-        ) : (
-          <RecentApplicationsTable
-            applications={dashboard.recentApplications}
-          />
-        )}
-      </div>
+      {/* Recent Applications */}
+      {dashboard.recentApplications.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-neutral-200 p-10 text-center">
+          <p className="text-sm text-neutral-400">No recent applications yet.</p>
+        </div>
+      ) : (
+        <RecentApplicationsTable applications={dashboard.recentApplications} />
+      )}
     </div>
   );
 }
