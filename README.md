@@ -65,8 +65,8 @@ internship-tracker/
 
 ## Deployment
 
-| Service | Config |
-|---------|--------|
+| Service | 
+|---------|
 | **Vercel** (frontend)
 | **Render** (backend)
 | **Neon** (database)
