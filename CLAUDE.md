@@ -30,35 +30,7 @@ npm run lint    # ESLint
 
 No ORM and no migration framework. All SQL is hand-written in service files. The `pool` singleton lives in `backend/src/database/database.ts` and connects via `DATABASE_URL`.
 
-**The schema does not exist in the repo** — it must be applied manually to the Neon database. The required DDL (derived from service queries):
-
-```sql
-CREATE TABLE IF NOT EXISTS users (
-  id            SERIAL PRIMARY KEY,
-  email         TEXT NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS applications (
-  id              SERIAL PRIMARY KEY,
-  company         TEXT NOT NULL,
-  position        TEXT NOT NULL,
-  status          TEXT NOT NULL,
-  location        TEXT,
-  salary          TEXT,
-  notes           TEXT,
-  job_url         TEXT,
-  user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  date_applied    TIMESTAMPTZ,
-  recruiter_name  TEXT,
-  recruiter_email TEXT,
-  interview_date  TIMESTAMPTZ,
-  resume_path     TEXT
-);
-```
-
-`backend/src/utils/mapApplication.ts` maps every DB row from snake_case to the camelCase `Application` interface before it leaves the service layer.
+The schema lives in `backend/src/database/schema.sql` and is applied via `npm run migrate` in the backend. `backend/src/utils/mapApplication.ts` maps every DB row from snake_case to the camelCase `Application` interface before it leaves the service layer.
 
 ### Backend Layout
 
@@ -102,7 +74,3 @@ PORT=           # optional, defaults to 3000
 VITE_API_URL=http://localhost:3000
 ```
 
-### Known Bugs
-
-- `dashboard.service.ts` queries column `"dateApplied"` (camelCase, double-quoted) in two places, but the actual DB column is `date_applied`. Both dashboard queries fail at runtime with a column-not-found error.
-- `updateApplication` in `applications.service.ts` accepts `recruiterName`, `recruiterEmail`, `interviewDate`, and `dateApplied` parameters but the `UPDATE` statement does not include those columns — they are silently dropped.
