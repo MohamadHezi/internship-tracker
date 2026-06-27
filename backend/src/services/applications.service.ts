@@ -52,9 +52,10 @@ export async function createApplication(
       salary,
       notes,
       job_url,
-      user_id
+      user_id,
+      date_applied
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
     RETURNING *;
     `,
     [

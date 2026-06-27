@@ -7,6 +7,7 @@ import DetailRow from '../components/ui/DetailRow';
 import Input from '../components/ui/Input';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import { formatDate } from '../utils/formatDate';
 
 function ApplicationDetailsPage() {
   const { id } = useParams();
@@ -67,7 +68,11 @@ function ApplicationDetailsPage() {
           formData.location ?? '',
           formData.salary ?? '',
           formData.notes ?? '',
-          formData.jobUrl ?? ''
+          formData.jobUrl ?? '',
+          formData.recruiterName ?? null,
+          formData.recruiterEmail ?? null,
+          formData.interviewDate ?? null,
+          formData.dateApplied ?? null,
         );
 
       setApplication(updatedApplication);
@@ -158,7 +163,7 @@ function ApplicationDetailsPage() {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Date Applied</label>
-                <Input type="date" value={formData.dateApplied ?? ''} onChange={(e) => updateField('dateApplied', e.target.value)} />
+                <Input type="date" value={(formData.dateApplied ?? '').slice(0, 10)} onChange={(e) => updateField('dateApplied', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -180,7 +185,7 @@ function ApplicationDetailsPage() {
             <div className="grid grid-cols-1 gap-4 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Interview Date</label>
-                <Input value={formData.interviewDate ?? ''} onChange={(e) => updateField('interviewDate', e.target.value)} />
+                <Input type="date" value={(formData.interviewDate ?? '').slice(0, 10)} onChange={(e) => updateField('interviewDate', e.target.value)} />
               </div>
             </div>
           </Section>
@@ -261,7 +266,7 @@ function ApplicationDetailsPage() {
             <DetailRow label="Status" value={application.status || 'Applied'} />
             <DetailRow label="Location" value={application.location ?? '—'} />
             <DetailRow label="Salary" value={application.salary ? <span className="font-mono">{application.salary}</span> : '—'} />
-            <DetailRow label="Applied" value={application.dateApplied ?? '—'} />
+            <DetailRow label="Applied" value={formatDate(application.dateApplied)} />
           </div>
         </Section>
 
@@ -344,7 +349,7 @@ function ApplicationDetailsPage() {
           <div className="text-sm">
             {application.jobUrl ? (
               <a
-                href={application.jobUrl}
+                href={/^https?:\/\//i.test(application.jobUrl!) ? application.jobUrl! : `https://${application.jobUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:text-blue-700 hover:underline break-all"

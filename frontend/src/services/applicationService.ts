@@ -50,7 +50,11 @@ export async function updateApplication(
   location: string,
   salary: string,
   notes: string,
-  jobUrl: string
+  jobUrl: string,
+  recruiterName: string | null,
+  recruiterEmail: string | null,
+  interviewDate: string | null,
+  dateApplied: string | null,
 ): Promise<Application> {
   return apiFetch<Application>(`/applications/${id}`, {
     method: 'PUT',
@@ -62,6 +66,10 @@ export async function updateApplication(
       salary,
       notes,
       job_url: jobUrl,
+      recruiterName,
+      recruiterEmail,
+      interviewDate,
+      dateApplied,
     }),
   });
 }
