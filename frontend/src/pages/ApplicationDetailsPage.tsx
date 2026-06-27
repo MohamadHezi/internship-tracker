@@ -336,6 +336,20 @@ function ApplicationDetailsPage() {
         </Section>
       </div>
 
+      {/* AI Resume Match entry point */}
+      <div className="flex items-center justify-between rounded-xl border border-violet-100 bg-violet-50/40 px-5 py-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-violet-600">AI</span>
+            <h3 className="text-sm font-semibold text-neutral-900">Resume Match</h3>
+          </div>
+          <p className="mt-0.5 text-xs text-neutral-500">Score your resume against this job posting.</p>
+        </div>
+        <Button onClick={() => navigate(`/applications/${application.id}/match`)}>
+          Analyze
+        </Button>
+      </div>
+
       <div className="flex flex-col-reverse gap-2.5 border-t border-neutral-100 pt-5 sm:flex-row sm:items-center sm:justify-end">
         <Button variant="secondary" onClick={() => navigate('/applications')}>
           Back

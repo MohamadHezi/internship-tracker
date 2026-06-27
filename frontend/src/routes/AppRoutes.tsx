@@ -7,6 +7,7 @@ import RegisterPage from '../pages/RegisterPage';
 import ApplicationsPage from '../pages/ApplicationsPage';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import ApplicationDetailsPage from '../pages/ApplicationDetailsPage';
+import ResumeMatchPage from '../pages/ResumeMatchPage';
 
 function AppRoutes() {
   return (
@@ -33,6 +34,11 @@ function AppRoutes() {
         <Route
           path="/applications/:id"
           element={<ApplicationDetailsPage />}
+        />
+
+        <Route
+          path="/applications/:id/match"
+          element={<ResumeMatchPage />}
         />
       </Route>
     </Routes>

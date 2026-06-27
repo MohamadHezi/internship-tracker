@@ -7,6 +7,7 @@ import cors from 'cors';
 import applicationsRouter from './routes/applications.routes';
 import authRouter from './routes/auth.routes';
 import dashboardRouter from './routes/dashboard.routes';
+import matchRouter from './routes/match.routes';
 import path from 'path';
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(
 );
 
 app.use('/applications', applicationsRouter);
+app.use('/applications', matchRouter);
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
 
